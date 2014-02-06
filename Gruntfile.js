@@ -4,15 +4,15 @@ module.exports = function(grunt) {
 		concat: {
 			engine: {
 				src: ['src/engine/main.js'],
-				dest: 'build/web/js/engine.js'
+				dest: 'build/js/engine.js'
 			}
 		},
 		copy: {
 			web: {
 				expand: true,
-				cwd: 'src/web/',
+				cwd: 'build/js/',
 				src: ['**'],
-				dest: 'build/web/'
+				dest: 'web/js'
 			}
 		}
 	});
