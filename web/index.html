@@ -5,11 +5,23 @@
 		<script type="text/javascript" src="js/engine.js"></script>
 	</head>
 	<body onload="startGameBuilder();">
-		<canvas id="canvasOne" width="320" height="240">
-			<p>This browser does not support canvas.</p>
-		</canvas>
-		<canvas id="canvasTwo" width="320" height="240">
+		<canvas id="canvasOne" width="640" height="480">
 			<p>This browser does not support canvas.</p>
 		</canvas>
 	</body>
+	<script type="text/javascript">
+
+	function startGameBuilder() {
+		gameManager.startInterval(1);
+
+		// CanvasOne
+		var contextOne = document.getElementById('canvasOne').getContext('2d');
+		var sceneManagerOne = gameManager.createSceneManager("sceneManagerOne", contextOne);
+		var sceneOne = gameManager.createScene("sceneOne");
+		var sceneObjectOne = gameManager.createSceneObject("sceneObjectOne");
+		sceneOne.addSceneObject(sceneObjectOne);
+		sceneManagerOne.setScene(sceneOne);
+	}
+
+	</script>
 </html>

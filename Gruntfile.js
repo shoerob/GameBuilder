@@ -3,7 +3,14 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		concat: {
 			engine: {
-				src: ['src/engine/main.js'],
+				src: [
+					'src/engine/buildStart.js',
+					'src/engine/sceneObject.js',
+					'src/engine/scene.js',
+					'src/engine/sceneManager.js',
+					'src/engine/GameManager.js',
+					'src/engine/buildEnd.js'
+					],
 				dest: 'build/js/engine.js'
 			}
 		},

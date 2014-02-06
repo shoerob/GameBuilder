@@ -1,25 +1,26 @@
-/**
- * This is the master object.
- */
-var GameBuilder = (function() {
+(function() {
 
+var SceneObject = (function() {
 	/**
-	 * SceneObject
-	 */
-	 function SceneObject() {
+	* SceneObject
+	*/
+	function SceneObject() {
 
-	 }
-	 SceneObject.prototype = {
-	 	constructor: SceneObject,
-	 	update: function() {
+	}
+	SceneObject.prototype = {
+		constructor: SceneObject,
+		update: function() {
 
-	 	},
-	 	render: function(ctx) {
-	        ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-	        ctx.fillRect (30, 30, 55, 50);
-	 	}
-	 }
+		},
+		render: function(ctx) {
+	    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+	    ctx.fillRect (30, 30, 55, 50);
+		}
+	}
 
+	return SceneObject;
+}());
+var Scene = (function() {
 	/**
 	 * Scene
 	 */
@@ -44,7 +45,9 @@ var GameBuilder = (function() {
 			this._sceneObjects.push(sceneObject);
 		}
 	}
-
+	return Scene;
+}());
+var SceneManager = (function() {
 	/**
 	 * SceneManager
 	 */
@@ -67,6 +70,12 @@ var GameBuilder = (function() {
 		}
 	}
 
+	return SceneManager;
+}());
+/**
+ * This is the master object.
+ */
+var GameManager = (function(SceneManager, Scene, SceneObject) {
 	function GameManager() {
 		this._sceneManagers = {};
 		this._scenes = {};
@@ -115,27 +124,10 @@ var GameBuilder = (function() {
 		}
 	}
 
-	return { GameManager: GameManager };
+	return GameManager;
+}(SceneManager, Scene, SceneObject));
+
+// Globals
+window.gameManager = new GameManager();
+
 }());
-
-function startGameBuilder() {
-	var gameManager = new GameBuilder.GameManager();
-	gameManager.startInterval(1);
-
-	// CanvasOne
-	var contextOne = document.getElementById('canvasOne').getContext('2d');
-	var sceneManagerOne = gameManager.createSceneManager("sceneManagerOne", contextOne);
-	var sceneOne = gameManager.createScene("sceneOne");
-	var sceneObjectOne = gameManager.createSceneObject("sceneObjectOne");
-	sceneOne.addSceneObject(sceneObjectOne);
-	sceneManagerOne.setScene(sceneOne);
-
-	// CanvasTwo
-	var contextTwo = document.getElementById('canvasTwo').getContext('2d');
-	var sceneManagerTwo = gameManager.createSceneManager("sceneManagerTwo", contextTwo);
-	var sceneTwo = gameManager.createScene("sceneTwo");
-	var sceneObjectTwo = gameManager.createSceneObject("sceneObjectTwo");
-	sceneTwo.addSceneObject(sceneObjectTwo);
-	sceneManagerTwo.setScene(sceneTwo);
-}
-
