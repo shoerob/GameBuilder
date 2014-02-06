@@ -1,7 +1,7 @@
 /**
  * This is the master object.
  */
-var GameManager = (function(SceneManager, Scene, SceneObject) {
+var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
 	function GameManager() {
 		this._sceneManagers = {};
 		this._scenes = {};
@@ -28,15 +28,21 @@ var GameManager = (function(SceneManager, Scene, SceneObject) {
 
 			throw new Error('Scene with name, "' + name + '" already exists.');
 		},
-		createSceneObject: function(name) {
+		createSceneObject: function(name, initFunc, updateFunc, renderFunc) {
 			if (!this._sceneObjects[name]) {
-				var sceneObject = new SceneObject(name);
+				var sceneObject = new SceneObject(name, initFunc, updateFunc, renderFunc);
 				this._sceneObjects[name] = sceneObject;
 				return sceneObject;
 			}
 
 			throw new Error('SceneObject with name, "' + name + '" already exists.');
 		},
+		// createPointSceneObject: function(name) {
+		// 	return utils.extend(this.createSceneObject(name), { render: function(ctx) {
+		// 		ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
+		// 	    ctx.fillRect (1, 1, 4, 4);
+		// 	} })
+		// },
 		startInterval: function(frameInterval) {
 			var self = this;
 			this._intervalId = setInterval(function() {
@@ -51,4 +57,4 @@ var GameManager = (function(SceneManager, Scene, SceneObject) {
 	}
 
 	return GameManager;
-}(SceneManager, Scene, SceneObject));
+}(utils, SceneManager, Scene, SceneObject));

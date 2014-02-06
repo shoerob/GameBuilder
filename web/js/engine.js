@@ -1,21 +1,37 @@
 (function() {
 
+var utils = (function() {
+    // http://pietschsoft.com/post/2009/07/29/javascript-Easily-Extend-an-Object-Element
+    // Create Global "extend" method
+    var extend = function(obj, extObj) {
+        if (arguments.length > 2) {
+            for (var a = 1; a < arguments.length; a++) {
+                extend(obj, arguments[a]);
+            }
+        } else {
+            for (var i in extObj) {
+                obj[i] = extObj[i];
+            }
+        }
+        return obj;
+    };
+
+    return { extend: extend };
+}());
 var SceneObject = (function() {
 	/**
 	* SceneObject
 	*/
-	function SceneObject() {
-
+	function SceneObject(name, initFunc, updateFunc, renderFunc) {
+		this.name = name;
+		initFunc(this);
+		this.update = updateFunc;
+		this.render = renderFunc;
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
-		update: function() {
-
-		},
-		render: function(ctx) {
-	    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-	    ctx.fillRect (30, 30, 55, 50);
-		}
+		update: function() { },
+		render: function(ctx) { }
 	}
 
 	return SceneObject;
@@ -75,7 +91,7 @@ var SceneManager = (function() {
 /**
  * This is the master object.
  */
-var GameManager = (function(SceneManager, Scene, SceneObject) {
+var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
 	function GameManager() {
 		this._sceneManagers = {};
 		this._scenes = {};
@@ -102,15 +118,21 @@ var GameManager = (function(SceneManager, Scene, SceneObject) {
 
 			throw new Error('Scene with name, "' + name + '" already exists.');
 		},
-		createSceneObject: function(name) {
+		createSceneObject: function(name, initFunc, updateFunc, renderFunc) {
 			if (!this._sceneObjects[name]) {
-				var sceneObject = new SceneObject(name);
+				var sceneObject = new SceneObject(name, initFunc, updateFunc, renderFunc);
 				this._sceneObjects[name] = sceneObject;
 				return sceneObject;
 			}
 
 			throw new Error('SceneObject with name, "' + name + '" already exists.');
 		},
+		// createPointSceneObject: function(name) {
+		// 	return utils.extend(this.createSceneObject(name), { render: function(ctx) {
+		// 		ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
+		// 	    ctx.fillRect (1, 1, 4, 4);
+		// 	} })
+		// },
 		startInterval: function(frameInterval) {
 			var self = this;
 			this._intervalId = setInterval(function() {
@@ -125,7 +147,7 @@ var GameManager = (function(SceneManager, Scene, SceneObject) {
 	}
 
 	return GameManager;
-}(SceneManager, Scene, SceneObject));
+}(utils, SceneManager, Scene, SceneObject));
 
 // Globals
 window.gameManager = new GameManager();

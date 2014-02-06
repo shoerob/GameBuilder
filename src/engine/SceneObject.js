@@ -2,18 +2,16 @@ var SceneObject = (function() {
 	/**
 	* SceneObject
 	*/
-	function SceneObject() {
-
+	function SceneObject(name, initFunc, updateFunc, renderFunc) {
+		this.name = name;
+		initFunc(this);
+		this.update = updateFunc;
+		this.render = renderFunc;
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
-		update: function() {
-
-		},
-		render: function(ctx) {
-	    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-	    ctx.fillRect (30, 30, 55, 50);
-		}
+		update: function() { },
+		render: function(ctx) { }
 	}
 
 	return SceneObject;

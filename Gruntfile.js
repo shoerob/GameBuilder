@@ -5,6 +5,7 @@ module.exports = function(grunt) {
 			engine: {
 				src: [
 					'src/engine/buildStart.js',
+					'src/common/utils.js',
 					'src/engine/sceneObject.js',
 					'src/engine/scene.js',
 					'src/engine/sceneManager.js',
