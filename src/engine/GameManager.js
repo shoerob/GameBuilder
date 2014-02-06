@@ -37,12 +37,6 @@ var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
 
 			throw new Error('SceneObject with name, "' + name + '" already exists.');
 		},
-		// createPointSceneObject: function(name) {
-		// 	return utils.extend(this.createSceneObject(name), { render: function(ctx) {
-		// 		ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
-		// 	    ctx.fillRect (1, 1, 4, 4);
-		// 	} })
-		// },
 		startInterval: function(frameInterval) {
 			var self = this;
 			this._intervalId = setInterval(function() {

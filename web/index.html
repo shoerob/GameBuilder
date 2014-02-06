@@ -14,43 +14,56 @@
 	function startGameBuilder() {
 		gameManager.startInterval(1);
 
+		// SceneObject Factory
+		var sceneObjectFactory = (function(gameManager) {
+			function createSnowParticles(name, particles, left, top, width, height) {
+				return gameManager.createSceneObject(name, function(sceneObject) {
+					// initialize
+					sceneObject.particles = [];
+					for (var i = 0; i < particles; i++) {
+						sceneObject.particles.push({ x: Math.random()*width+left, y: Math.random()*height+top });
+					}
+				}, function() {
+					// update
+					// var particle = this.particles[]
+					this.particles.forEach(function(particle) {
+						particle.y++;
+						particle.x+= Math.random() * 2 - 1
+
+						if (particle.y > top+height) {
+							particle.y = top;
+						}
+						if (particle.x > left+width+4) {
+							particle.x = left;
+						}
+						if (particle.x < left-4) {
+							particle.x = left+width;
+						}
+					});
+
+				}, function(ctx) {
+					// render
+					this.particles.forEach(function(particle) {
+						ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
+					    ctx.fillRect (particle.x, particle.y, 4, 4);
+					});
+				});
+			}
+
+			return { createSnowParticles: createSnowParticles }
+		}(gameManager));
+
+
 		// CanvasOne
 		var contextOne = document.getElementById('canvasOne').getContext('2d');
 		var sceneManagerOne = gameManager.createSceneManager("sceneManagerOne", contextOne);
 		var sceneOne = gameManager.createScene("sceneOne");
 
 		// snow effect
-		sceneOne.addSceneObject(gameManager.createSceneObject("sceneObjectOne", function(sceneObject) {
-			// initialize
-			sceneObject.particles = [];
-			for (var i = 0; i < 500; i++) {
-				sceneObject.particles.push({ x: Math.random() * 640, y: Math.random() * 480 });
-			}
-		}, function() {
-			// update
-			// var particle = this.particles[]
-			this.particles.forEach(function(particle) {
-				particle.y++;
-				particle.x+= Math.random() * 2 - 1
-
-				if (particle.y > 480) {
-					particle.y = 0;
-				}
-				if (particle.x > 644) {
-					particle.x = 0;
-				}
-				if (particle.x < -4) {
-					particle.x = 640;
-				}
-			});
-
-		}, function(ctx) {
-			// render
-			this.particles.forEach(function(particle) {
-				ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
-			    ctx.fillRect (particle.x, particle.y, 4, 4);
-			});
-		}));
+		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('1', 5000, 0, 0, 640, 480));
+		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('2', 500, 100, 100, 100, 100));
+		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('3', 5000,200, 200, 640, 480));
+		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('4', 5000,300, 300, 100, 100));
 
 		sceneManagerOne.setScene(sceneOne);
 	}
