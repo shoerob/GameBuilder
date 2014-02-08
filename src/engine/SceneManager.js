@@ -10,9 +10,9 @@ var SceneManager = (function() {
 	}
 	SceneManager.prototype = {
 		constructor: SceneManager,
-		process: function() {
+		process: function(gameTime) {
 			if (this._scene) {
-				this._scene.update();
+				this._scene.update(gameTime);
 				this._scene.render(this._ctx);
 			}
 		},

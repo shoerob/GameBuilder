@@ -8,9 +8,9 @@ var Scene = (function() {
 	}
 	Scene.prototype = {
 		constructor: Scene,
-		update: function() {
+		update: function(gameTime) {
 			this._sceneObjects.forEach(function(sceneObject) {
-				sceneObject.update();
+				sceneObject.update(gameTime);
 			});
 		},
 		render: function(ctx) {

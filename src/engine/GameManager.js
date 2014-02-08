@@ -1,7 +1,7 @@
 /**
  * This is the master object.
  */
-var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
+var GameManager = (function(utils, GameTime, SceneManager, Scene, SceneObject) {
 	function GameManager() {
 		this._sceneManagers = {};
 		this._scenes = {};
@@ -37,18 +37,30 @@ var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
 
 			throw new Error('SceneObject with name, "' + name + '" already exists.');
 		},
+		/**
+		 * Starts the game timer.
+		 */
 		startInterval: function(frameInterval) {
 			var self = this;
+			
+			/**
+			 * The main GameManager gameTime object
+			 */
+			var gameTime = new GameTime();
 			this._intervalId = setInterval(function() {
+				gameTime.update();
 				for (sceneManager in self._sceneManagers) {
-					self._sceneManagers[sceneManager].process();
+					self._sceneManagers[sceneManager].process(gameTime);
 				};
 			}, frameInterval);
 		},
+		/**
+		 * Stops the game timer.
+		 */
 		stopInterval: function() {
 			clearInterval(this._intervalId);
 		}
-	}
+	};
 
 	return GameManager;
-}(utils, SceneManager, Scene, SceneObject));
+}(utils, GameTime, SceneManager, Scene, SceneObject));

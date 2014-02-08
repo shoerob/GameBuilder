@@ -23,12 +23,12 @@
 					for (var i = 0; i < particles; i++) {
 						sceneObject.particles.push({ x: Math.random()*width+left, y: Math.random()*height+top });
 					}
-				}, function() {
-					// update
-					// var particle = this.particles[]
+				// Update
+				}, function(gameTime) {
+					var timePassed = gameTime.getTimePassed()/60;
 					this.particles.forEach(function(particle) {
-						particle.y++;
-						particle.x+= Math.random() * 2 - 1
+						particle.y += 1 * timePassed;
+						particle.x += (Math.random() * 2 - 1) * timePassed;
 
 						if (particle.y > top+height) {
 							particle.y = top;
@@ -40,7 +40,7 @@
 							particle.x = left+width;
 						}
 					});
-
+				// Render
 				}, function(ctx) {
 					// render
 					this.particles.forEach(function(particle) {

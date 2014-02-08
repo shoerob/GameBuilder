@@ -18,6 +18,43 @@ var utils = (function() {
 
     return { extend: extend };
 }());
+var GameTime = (function() {
+
+	/**
+	 * This keeps track of current and elapsed game times.
+	 */
+	function GameTime() {
+		this._time = new Date().getTime();
+		this._timePassed = 0;
+	}
+	GameTime.prototype = {
+		constructor: GameTime,
+		/**
+		 * Updates the current and elapsed times.
+		 */
+		update: function() {
+			this._timePassed = this._time;
+			this._time = new Date().getTime();
+			this._timePassed = this._time - this._timePassed;
+		},
+		/**
+		 * Gets the current game time.
+		 * @return {number} The current game time in milliseconds.
+		 */
+		getTime: function() {
+			return this._time;
+		},
+		/**
+		 * Gets the amount of time that passed since update was last called.
+		 * @return {number} The time passed since last update in milliseconds.
+		 */
+		getTimePassed: function() {
+			return this._timePassed;
+		}
+	};
+
+	return GameTime;
+}());
 var SceneObject = (function() {
 	/**
 	* SceneObject
@@ -30,7 +67,7 @@ var SceneObject = (function() {
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
-		update: function() { },
+		update: function(gameTime) { },
 		render: function(ctx) { }
 	}
 
@@ -46,9 +83,9 @@ var Scene = (function() {
 	}
 	Scene.prototype = {
 		constructor: Scene,
-		update: function() {
+		update: function(gameTime) {
 			this._sceneObjects.forEach(function(sceneObject) {
-				sceneObject.update();
+				sceneObject.update(gameTime);
 			});
 		},
 		render: function(ctx) {
@@ -75,9 +112,9 @@ var SceneManager = (function() {
 	}
 	SceneManager.prototype = {
 		constructor: SceneManager,
-		process: function() {
+		process: function(gameTime) {
 			if (this._scene) {
-				this._scene.update();
+				this._scene.update(gameTime);
 				this._scene.render(this._ctx);
 			}
 		},
@@ -91,7 +128,7 @@ var SceneManager = (function() {
 /**
  * This is the master object.
  */
-var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
+var GameManager = (function(utils, GameTime, SceneManager, Scene, SceneObject) {
 	function GameManager() {
 		this._sceneManagers = {};
 		this._scenes = {};
@@ -127,27 +164,33 @@ var GameManager = (function(utils, SceneManager, Scene, SceneObject) {
 
 			throw new Error('SceneObject with name, "' + name + '" already exists.');
 		},
-		// createPointSceneObject: function(name) {
-		// 	return utils.extend(this.createSceneObject(name), { render: function(ctx) {
-		// 		ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
-		// 	    ctx.fillRect (1, 1, 4, 4);
-		// 	} })
-		// },
+		/**
+		 * Starts the game timer.
+		 */
 		startInterval: function(frameInterval) {
 			var self = this;
+			
+			/**
+			 * The main GameManager gameTime object
+			 */
+			var gameTime = new GameTime();
 			this._intervalId = setInterval(function() {
+				gameTime.update();
 				for (sceneManager in self._sceneManagers) {
-					self._sceneManagers[sceneManager].process();
+					self._sceneManagers[sceneManager].process(gameTime);
 				};
 			}, frameInterval);
 		},
+		/**
+		 * Stops the game timer.
+		 */
 		stopInterval: function() {
 			clearInterval(this._intervalId);
 		}
-	}
+	};
 
 	return GameManager;
-}(utils, SceneManager, Scene, SceneObject));
+}(utils, GameTime, SceneManager, Scene, SceneObject));
 
 // Globals
 window.gameManager = new GameManager();

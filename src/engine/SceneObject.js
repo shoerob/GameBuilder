@@ -10,7 +10,7 @@ var SceneObject = (function() {
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
-		update: function() { },
+		update: function(gameTime) { },
 		render: function(ctx) { }
 	}
 
