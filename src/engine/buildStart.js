@@ -1,1 +1,1 @@
-(function() {
+var GameManager = (function() {

@@ -1,5 +1,3 @@
 
-// Globals
-window.gameManager = new GameManager();
-
+	return GameManager;
 }());

@@ -12,6 +12,7 @@
 	<script type="text/javascript">
 
 	function startGameBuilder() {
+		var gameManager = new GameManager();
 		gameManager.startInterval(1);
 
 		// SceneObject Factory
@@ -61,9 +62,9 @@
 
 		// snow effect
 		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('1', 5000, 0, 0, 640, 480));
-		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('2', 500, 100, 100, 100, 100));
-		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('3', 5000,200, 200, 640, 480));
-		sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('4', 5000,300, 300, 100, 100));
+		//sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('2', 500, 100, 100, 100, 100));
+		//sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('3', 5000,200, 200, 640, 480));
+		//sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('4', 5000,300, 300, 100, 100));
 
 		sceneManagerOne.setScene(sceneOne);
 	}
