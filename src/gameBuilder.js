@@ -122,20 +122,14 @@ function startGameBuilder() {
 	var gameManager = new GameBuilder.GameManager();
 	gameManager.startInterval(1);
 
-	// CanvasOne
-	var contextOne = document.getElementById('canvasOne').getContext('2d');
-	var sceneManagerOne = gameManager.createSceneManager("sceneManagerOne", contextOne);
-	var sceneOne = gameManager.createScene("sceneOne");
-	var sceneObjectOne = gameManager.createSceneObject("sceneObjectOne");
-	sceneOne.addSceneObject(sceneObjectOne);
-	sceneManagerOne.setScene(sceneOne);
-
-	// CanvasTwo
-	var contextTwo = document.getElementById('canvasTwo').getContext('2d');
-	var sceneManagerTwo = gameManager.createSceneManager("sceneManagerTwo", contextTwo);
-	var sceneTwo = gameManager.createScene("sceneTwo");
-	var sceneObjectTwo = gameManager.createSceneObject("sceneObjectTwo");
-	sceneTwo.addSceneObject(sceneObjectTwo);
-	sceneManagerTwo.setScene(sceneTwo);
+	for(int i = 0; i < 9; i++)
+	{
+		var contextOne = document.getElementById(i).getContext('2d');
+		var sceneManagerOne = gameManager.createSceneManager(i + 'sceneManager', contextOne);
+		var sceneOne = gameManager.createScene(i + 'scene');
+		var sceneObjectOne = gameManager.createSceneObject(i + 'sceneObject');
+		sceneOne.addSceneObject(sceneObjectOne);
+		sceneManagerOne.setScene(sceneOne);
+	}				
 }
 
