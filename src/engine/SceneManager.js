@@ -1,8 +1,7 @@
 /**
  * SceneManager
  */
-function SceneManager(name, context) {
-	this.name = name;
+function SceneManager(context) {
 	this._ctx = context;
 	this._scene = null;
 	this._intervalId = null;

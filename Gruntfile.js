@@ -7,13 +7,28 @@ module.exports = function(grunt) {
 					'src/engine/buildStart.js',
 					'src/common/utils.js',
 					'src/engine/GameTime.js',
-					'src/engine/sceneObject.js',
-					'src/engine/scene.js',
-					'src/engine/sceneManager.js',
+					'src/engine/SceneObject.js',
+					'src/engine/Scene.js',
+					'src/engine/SceneManager.js',
+					'src/engine/Game.js',
 					'src/engine/GameManager.js',
 					'src/engine/buildEnd.js'
 					],
 				dest: 'build/js/engine.js'
+			},
+			extensions: {
+				src: [
+					'src/extensions/buildStart.js',
+					'src/extensions/SnowSceneObject.js',
+					'src/extensions/buildEnd.js'
+				],
+				dest: 'build/js/extensions.js'
+			},
+			gameBuilder: {
+				src: [
+					'src/gameBuilder/GameBuilder.js'
+				],
+				dest: 'build/js/GameBuilder.js'
 			}
 		},
 		copy: {

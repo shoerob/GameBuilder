@@ -1,3 +1,8 @@
 
-	return { GameManager: GameManager, SceneManager: SceneManager, Scene: Scene, SceneObject: SceneObject };
+	return { 
+		GameManager: GameManager, 
+		Game: Game, 
+		SceneManager: SceneManager, 
+		Scene: Scene, 
+		SceneObject: SceneObject };
 }());

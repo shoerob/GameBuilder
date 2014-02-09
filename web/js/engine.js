@@ -1,4 +1,4 @@
-var gameBuilder = (function() {
+var engine = (function() {
 
 var utils = (function() {
     // http://pietschsoft.com/post/2009/07/29/javascript-Easily-Extend-an-Object-Element
@@ -51,54 +51,87 @@ GameTime.prototype = {
 	}
 };
 
-/**
-* SceneObject
-*/
-function SceneObject(name) {
-	this.name = name;
-}
-SceneObject.prototype = {
-	constructor: SceneObject,
-	update: function(gameTime) { },
-	render: function(ctx) { }
-}
-
-/**
- * Scene
- */
-function Scene(name) {
-	this.name = name;
-	this._sceneObjects = [];
-	this._sceneObjectsByName = {};
-}
-Scene.prototype = {
-	constructor: Scene,
-	update: function(gameTime) {
-		this._sceneObjects.forEach(function(sceneObject) {
-			sceneObject.update(gameTime);
-		});
-	},
-	render: function(ctx) {
-		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		this._sceneObjects.forEach(function(sceneObject) {
-			sceneObject.render(ctx);
-		});
-	},
-	addSceneObject: function(sceneObject) {
-		if (this._sceneObjectsByName[sceneObject.name]) {
-			throw new Error("SceneObject with name, '" + sceneObject.name + ",' already exists.");
-		}
-
-		this._sceneObjectsByName[sceneObject.name] = sceneObject;
-		this._sceneObjects.push(sceneObject);
+var SceneObject = (function() {
+	/**
+	* SceneObject
+	*/
+	function SceneObject(name) {
+		this.name = name;
 	}
-}
+	SceneObject.prototype = {
+		constructor: SceneObject,
+		update: function(gameTime) { },
+		render: function(ctx) {
+			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
+		    ctx.fillRect (320, 240, 25, 25);
+		}
+	}
 
+	function create(name) {
+		return new SceneObject(name);
+	}
+
+	function load(json) {
+
+	}
+
+	return { create: create, load: load }
+}());
+var Scene = (function Scene() {
+
+	/**
+	 * Scene
+	 */
+	function Scene(name) {
+		this.name = name;
+		this.sceneObjects = [];
+		this.sceneObjectsByName = {};
+	}
+	Scene.prototype = {
+		constructor: Scene,
+		update: function(gameTime) {
+			this.sceneObjects.forEach(function(sceneObject) {
+				sceneObject.update(gameTime);
+			});
+		},
+		render: function(ctx) {
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			this.sceneObjects.forEach(function(sceneObject) {
+				sceneObject.render(ctx);
+			});
+		},
+		addSceneObject: function(sceneObject) {
+			if (this.sceneObjectsByName[sceneObject.name]) {
+				throw new Error("SceneObject with name, '" + sceneObject.name + ",' already exists.");
+			}
+
+			this.sceneObjectsByName[sceneObject.name] = sceneObject;
+			this.sceneObjects.push(sceneObject);
+		}
+	}
+
+	function create(name) {
+		// create the scene
+		var scene = new Scene(name);
+
+		// provide it with a default SceneObject
+		var sceneObject = engine.SceneObject.create('default');
+		scene.sceneObjects.push(sceneObject);
+		scene.sceneObjectsByName['default'] = sceneObject;
+
+		return scene;
+	}
+
+	function load(json) {
+
+	}
+
+	return { create: create, load: load };
+}());
 /**
  * SceneManager
  */
-function SceneManager(name, context) {
-	this.name = name;
+function SceneManager(context) {
 	this._ctx = context;
 	this._scene = null;
 	this._intervalId = null;
@@ -117,23 +150,64 @@ SceneManager.prototype = {
 }
 
 /**
+ * This is the Game description / creation object.
+ */
+var Game = (function Game() {
+	function Game() {
+		this.scenes = {};
+
+		this.defaults = {
+			startSceneName: ''
+		}
+	}
+	Game.prototype = {
+		constructor: Game,
+		addScene: function() {
+
+		},
+		saveAsJSON: function() {
+			// Build a JSON structure using the defaults
+			// from all children objects and their children
+		},
+
+	}
+
+	function create() {
+		// create the game
+		var game = new Game();
+
+		// provide it with a default scene
+		game.scenes['default'] = engine.Scene.create('default');
+		game.defaults.startSceneName = 'default';
+
+		return game;
+	}
+
+	function load(json) {
+
+	}
+
+	return { create: create, load: load };
+}());
+
+/**
  * This is the master object.
  */
-function GameManager() {
+function GameManager(context) {
 	this._sceneManagers = {};
 	this._intervalId = null;
+
+	// globals
+	this.mode = 'edit'; // or 'run'
+	this._game = null;
+
+	// managers
+	this.sceneManager = new SceneManager(context)
+	//this.assetManager ...
+	//this.soundManager ...
 }
 GameManager.prototype = {
 	constructor: GameManager,
-	createSceneManager: function(name, context) {
-		if (!this._sceneManagers[name]) {
-			var sceneManager = new SceneManager(name, context);
-			this._sceneManagers[name] = sceneManager;
-			return sceneManager;
-		}
-
-		throw new Error('SceneManager with name, "' + name + '" already exists.');
-	},
 	/**
 	 * Starts the game timer.
 	 */
@@ -146,9 +220,7 @@ GameManager.prototype = {
 		var gameTime = new GameTime();
 		this._intervalId = setInterval(function() {
 			gameTime.update();
-			for (sceneManager in self._sceneManagers) {
-				self._sceneManagers[sceneManager].process(gameTime);
-			};
+			self.sceneManager.process(gameTime);
 		}, frameInterval);
 	},
 	/**
@@ -156,8 +228,19 @@ GameManager.prototype = {
 	 */
 	stopInterval: function() {
 		clearInterval(this._intervalId);
+	},
+	setGame: function(game) {
+		this._game = game;
+
+		// load and display the start scene in the game
+		this.sceneManager.setScene(this._game.scenes[this._game.defaults.startSceneName]);
 	}
 };
 
-	return { GameManager: GameManager, SceneManager: SceneManager, Scene: Scene, SceneObject: SceneObject };
+	return { 
+		GameManager: GameManager, 
+		Game: Game, 
+		SceneManager: SceneManager, 
+		Scene: Scene, 
+		SceneObject: SceneObject };
 }());

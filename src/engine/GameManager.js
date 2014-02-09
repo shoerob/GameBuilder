@@ -1,21 +1,21 @@
 /**
  * This is the master object.
  */
-function GameManager() {
+function GameManager(context) {
 	this._sceneManagers = {};
 	this._intervalId = null;
+
+	// globals
+	this.mode = 'edit'; // or 'run'
+	this._game = null;
+
+	// managers
+	this.sceneManager = new SceneManager(context)
+	//this.assetManager ...
+	//this.soundManager ...
 }
 GameManager.prototype = {
 	constructor: GameManager,
-	createSceneManager: function(name, context) {
-		if (!this._sceneManagers[name]) {
-			var sceneManager = new SceneManager(name, context);
-			this._sceneManagers[name] = sceneManager;
-			return sceneManager;
-		}
-
-		throw new Error('SceneManager with name, "' + name + '" already exists.');
-	},
 	/**
 	 * Starts the game timer.
 	 */
@@ -28,9 +28,7 @@ GameManager.prototype = {
 		var gameTime = new GameTime();
 		this._intervalId = setInterval(function() {
 			gameTime.update();
-			for (sceneManager in self._sceneManagers) {
-				self._sceneManagers[sceneManager].process(gameTime);
-			};
+			self.sceneManager.process(gameTime);
 		}, frameInterval);
 	},
 	/**
@@ -38,5 +36,11 @@ GameManager.prototype = {
 	 */
 	stopInterval: function() {
 		clearInterval(this._intervalId);
+	},
+	setGame: function(game) {
+		this._game = game;
+
+		// load and display the start scene in the game
+		this.sceneManager.setScene(this._game.scenes[this._game.defaults.startSceneName]);
 	}
 };
