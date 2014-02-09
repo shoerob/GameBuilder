@@ -1,4 +1,4 @@
-var GameManager = (function() {
+var gameBuilder = (function() {
 
 var utils = (function() {
     // http://pietschsoft.com/post/2009/07/29/javascript-Easily-Extend-an-Object-Element
@@ -54,11 +54,8 @@ GameTime.prototype = {
 /**
 * SceneObject
 */
-function SceneObject(name, initFunc, updateFunc, renderFunc) {
+function SceneObject(name) {
 	this.name = name;
-	initFunc(this);
-	this.update = updateFunc;
-	this.render = renderFunc;
 }
 SceneObject.prototype = {
 	constructor: SceneObject,
@@ -72,6 +69,7 @@ SceneObject.prototype = {
 function Scene(name) {
 	this.name = name;
 	this._sceneObjects = [];
+	this._sceneObjectsByName = {};
 }
 Scene.prototype = {
 	constructor: Scene,
@@ -87,6 +85,11 @@ Scene.prototype = {
 		});
 	},
 	addSceneObject: function(sceneObject) {
+		if (this._sceneObjectsByName[sceneObject.name]) {
+			throw new Error("SceneObject with name, '" + sceneObject.name + ",' already exists.");
+		}
+
+		this._sceneObjectsByName[sceneObject.name] = sceneObject;
 		this._sceneObjects.push(sceneObject);
 	}
 }
@@ -119,7 +122,6 @@ SceneManager.prototype = {
 function GameManager() {
 	this._sceneManagers = {};
 	this._scenes = {};
-	this._sceneObjects = {};
 	this._intervalId = null;
 }
 GameManager.prototype = {
@@ -141,15 +143,6 @@ GameManager.prototype = {
 		}
 
 		throw new Error('Scene with name, "' + name + '" already exists.');
-	},
-	createSceneObject: function(name, initFunc, updateFunc, renderFunc) {
-		if (!this._sceneObjects[name]) {
-			var sceneObject = new SceneObject(name, initFunc, updateFunc, renderFunc);
-			this._sceneObjects[name] = sceneObject;
-			return sceneObject;
-		}
-
-		throw new Error('SceneObject with name, "' + name + '" already exists.');
 	},
 	/**
 	 * Starts the game timer.
@@ -176,5 +169,5 @@ GameManager.prototype = {
 	}
 };
 
-	return GameManager;
+	return { GameManager: GameManager, SceneObject: SceneObject };
 }());

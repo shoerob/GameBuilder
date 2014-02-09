@@ -1,1 +1,1 @@
-var GameManager = (function() {
+var gameBuilder = (function() {

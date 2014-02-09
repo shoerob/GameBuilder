@@ -1,11 +1,8 @@
 /**
 * SceneObject
 */
-function SceneObject(name, initFunc, updateFunc, renderFunc) {
+function SceneObject(name) {
 	this.name = name;
-	initFunc(this);
-	this.update = updateFunc;
-	this.render = renderFunc;
 }
 SceneObject.prototype = {
 	constructor: SceneObject,

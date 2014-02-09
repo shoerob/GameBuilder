@@ -4,7 +4,6 @@
 function GameManager() {
 	this._sceneManagers = {};
 	this._scenes = {};
-	this._sceneObjects = {};
 	this._intervalId = null;
 }
 GameManager.prototype = {
@@ -26,15 +25,6 @@ GameManager.prototype = {
 		}
 
 		throw new Error('Scene with name, "' + name + '" already exists.');
-	},
-	createSceneObject: function(name, initFunc, updateFunc, renderFunc) {
-		if (!this._sceneObjects[name]) {
-			var sceneObject = new SceneObject(name, initFunc, updateFunc, renderFunc);
-			this._sceneObjects[name] = sceneObject;
-			return sceneObject;
-		}
-
-		throw new Error('SceneObject with name, "' + name + '" already exists.');
 	},
 	/**
 	 * Starts the game timer.

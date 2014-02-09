@@ -4,6 +4,7 @@
 function Scene(name) {
 	this.name = name;
 	this._sceneObjects = [];
+	this._sceneObjectsByName = {};
 }
 Scene.prototype = {
 	constructor: Scene,
@@ -19,6 +20,11 @@ Scene.prototype = {
 		});
 	},
 	addSceneObject: function(sceneObject) {
+		if (this._sceneObjectsByName[sceneObject.name]) {
+			throw new Error("SceneObject with name, '" + sceneObject.name + ",' already exists.");
+		}
+
+		this._sceneObjectsByName[sceneObject.name] = sceneObject;
 		this._sceneObjects.push(sceneObject);
 	}
 }

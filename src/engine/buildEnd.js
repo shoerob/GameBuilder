@@ -1,3 +1,3 @@
 
-	return GameManager;
+	return { GameManager: GameManager, SceneObject: SceneObject };
 }());
