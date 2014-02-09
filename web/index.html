@@ -57,7 +57,7 @@
 		// CanvasOne
 		var contextOne = document.getElementById('canvasOne').getContext('2d');
 		var sceneManagerOne = gameManager.createSceneManager("sceneManagerOne", contextOne);
-		var sceneOne = gameManager.createScene("sceneOne");
+		var sceneOne = new gameBuilder.Scene('sceneOne');
 
 		// snow effect
 		sceneOne.addSceneObject(new SnowSceneObject('1', 5000, 0, 0, 640, 480));

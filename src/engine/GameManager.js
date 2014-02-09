@@ -3,7 +3,6 @@
  */
 function GameManager() {
 	this._sceneManagers = {};
-	this._scenes = {};
 	this._intervalId = null;
 }
 GameManager.prototype = {
@@ -16,15 +15,6 @@ GameManager.prototype = {
 		}
 
 		throw new Error('SceneManager with name, "' + name + '" already exists.');
-	},
-	createScene: function(name) {
-		if (!this._scenes[name]) {
-			var scene = new Scene(name);
-			this._scenes[name] = scene;
-			return scene;
-		}
-
-		throw new Error('Scene with name, "' + name + '" already exists.');
 	},
 	/**
 	 * Starts the game timer.
