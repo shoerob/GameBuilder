@@ -17,8 +17,13 @@ var Game = (function Game() {
 		getCurrentScene: function() {
 			return this.scenes[this.currentSceneName];
 		},
-		addScene: function() {
+		addScene: function(scene) {
+			if (this.scenes[scene.name]) {
+				throw new Error("Scene with name, '" + scene.name + ",' already exists.");
+			}
 
+			this.scenes[scene.name] = scene;
+			scene.game = this;
 		},
 		getModel: function() {
 			var model = JSON.parse(JSON.stringify(this.model)); // clone
@@ -40,16 +45,7 @@ var Game = (function Game() {
 		};
 
 		// create the game
-		var game = new Game(model);
-
-		// TODO: we shouldn't provide default children here
-
-		// provide it with a default scene
-		game.scenes['default'] = engine.Scene.create('default');
-		game.startSceneName = 'default';
-		game.init();
-
-		return game;
+		return new Game(model);
 	}
 
 	function load(json) {

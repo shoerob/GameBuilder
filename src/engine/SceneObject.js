@@ -8,13 +8,19 @@ var SceneObject = (function() {
 		this.name = model.name;
 		this.position = { x: model.position.x, y: model.position.y };
 		this.bounds = { width: model.bounds.width, height: model.bounds.height };
+
+		this.scene = null; // parent
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
 		update: function(gameTime) { },
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
-		    ctx.fillRect(this.position.x - this.bounds.width/2, this.position.y - this.bounds.height/2, 25, 25);
+		    ctx.fillRect(
+		    	this.position.x - this.bounds.width/2, 
+		    	this.position.y - this.bounds.height/2, 
+		    	this.bounds.width,
+		    	this.bounds.height);
 		},
 		getModel: function() {
 			var model = JSON.parse(JSON.stringify(this.model)); // clone

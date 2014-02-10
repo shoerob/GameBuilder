@@ -11,6 +11,19 @@ var GameBuilder = (function() {
 	GameBuilder.prototype = {
 		createGame: function() {
 			this.game = engine.Game.create();
+
+			// provide it with a default scene
+			var defaultScene = engine.Scene.create('default');
+
+			// provide it with a default SceneObject
+			var sceneObject = engine.SceneObject.create('default');
+			defaultScene.addSceneObject(sceneObject);
+
+			// add the scene to the game, and start the game
+			this.game.addScene(defaultScene);
+			this.game.startSceneName = 'default';
+			this.game.init();
+
 			this.gameManager.setGame(this.game);
 		},
 		createScene: function() {

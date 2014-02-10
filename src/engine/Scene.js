@@ -5,6 +5,8 @@ var Scene = (function Scene() {
 		this.name = model.name;
 		this.sceneObjects = [];
 		this.sceneObjectsByName = {};
+
+		this.game = null; // parent
 	}
 	Scene.prototype = {
 		constructor: Scene,
@@ -26,6 +28,7 @@ var Scene = (function Scene() {
 
 			this.sceneObjectsByName[sceneObject.name] = sceneObject;
 			this.sceneObjects.push(sceneObject);
+			sceneObject.scene = this;
 		},
 		getModel: function() {
 			var model = JSON.parse(JSON.stringify(this.model)); // clone
@@ -45,17 +48,7 @@ var Scene = (function Scene() {
 			sceneObjects: {}
 		};
 
-		// create the scene
-		var scene = new Scene(model);
-
-		// TODO: we shouldn't provide default children here
-
-		// provide it with a default SceneObject
-		var sceneObject = engine.SceneObject.create('default');
-		scene.sceneObjects.push(sceneObject);
-		scene.sceneObjectsByName['default'] = sceneObject;
-
-		return scene;
+		return new Scene(model);
 	}
 
 	function load(json) {
