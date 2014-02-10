@@ -10,6 +10,11 @@ var Scene = (function Scene() {
 	}
 	Scene.prototype = {
 		constructor: Scene,
+		resetFromModel: function() {
+			this.sceneObjects.forEach(function(sceneObject) {
+				sceneObject.resetFromModel();
+			});
+		},
 		update: function(gameTime) {
 			this.sceneObjects.forEach(function(sceneObject) {
 				sceneObject.update(gameTime);

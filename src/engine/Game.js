@@ -5,12 +5,22 @@ var Game = (function Game() {
 	function Game(model) {
 		this.model = model;
 
+		this.name = model.name;
 		this.startSceneName = model.startSceneName;
 		this.currentSceneName = '';
 		this.scenes = {};
 	}
 	Game.prototype = {
 		constructor: Game,
+		resetFromModel: function() {
+			this.startSceneName = this.model.startSceneName;
+			this.currentSceneName = '';
+			for (sceneName in this.scenes) {
+				this.scenes[sceneName].resetFromModel();
+			}
+
+			this.init();
+		},
 		init: function() {
 			this.currentSceneName = this.startSceneName;
 		},
@@ -32,15 +42,15 @@ var Game = (function Game() {
 			}
 
 			return model;
-		}
+		},
 	}
 
-	function create() {
+	function create(name) {
 		// default model
 		var model = {
 			modelType: 'Game',
 			name: '',
-			startSceneName: '',
+			startSceneName: 'default', // HACK
 			scenes: {}
 		};
 

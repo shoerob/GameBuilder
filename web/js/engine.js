@@ -66,7 +66,13 @@ var SceneObject = (function() {
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
-		update: function(gameTime) { },
+		resetFromModel: function() {
+			this.position = { x: this.model.position.x, y: this.model.position.y };
+			this.bounds = { width: this.model.bounds.width, height: this.model.bounds.height };
+		},
+		update: function(gameTime) { 
+			this.position.y++;
+		},
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
 		    ctx.fillRect(
@@ -111,6 +117,11 @@ var Scene = (function Scene() {
 	}
 	Scene.prototype = {
 		constructor: Scene,
+		resetFromModel: function() {
+			this.sceneObjects.forEach(function(sceneObject) {
+				sceneObject.resetFromModel();
+			});
+		},
 		update: function(gameTime) {
 			this.sceneObjects.forEach(function(sceneObject) {
 				sceneObject.update(gameTime);
@@ -161,7 +172,8 @@ var Scene = (function Scene() {
 /**
  * SceneManager
  */
-function SceneManager(context) {
+function SceneManager(gameManager, context) {
+	this._gameManager = gameManager;
 	this._ctx = context;
 	this._scene = null;
 	this._intervalId = null;
@@ -186,12 +198,22 @@ var Game = (function Game() {
 	function Game(model) {
 		this.model = model;
 
+		this.name = model.name;
 		this.startSceneName = model.startSceneName;
 		this.currentSceneName = '';
 		this.scenes = {};
 	}
 	Game.prototype = {
 		constructor: Game,
+		resetFromModel: function() {
+			this.startSceneName = this.model.startSceneName;
+			this.currentSceneName = '';
+			for (sceneName in this.scenes) {
+				this.scenes[sceneName].resetFromModel();
+			}
+
+			this.init();
+		},
 		init: function() {
 			this.currentSceneName = this.startSceneName;
 		},
@@ -213,15 +235,15 @@ var Game = (function Game() {
 			}
 
 			return model;
-		}
+		},
 	}
 
-	function create() {
+	function create(name) {
 		// default model
 		var model = {
 			modelType: 'Game',
 			name: '',
-			startSceneName: '',
+			startSceneName: 'default', // HACK
 			scenes: {}
 		};
 
@@ -244,11 +266,11 @@ function GameManager(context) {
 	this._intervalId = null;
 
 	// globals
-	this.mode = 'edit'; // or 'run'
+	this.editMode = false;
 	this._game = null;
 
 	// managers
-	this.sceneManager = new SceneManager(context)
+	this.sceneManager = new SceneManager(this, context)
 	//this.assetManager ...
 	//this.soundManager ...
 }

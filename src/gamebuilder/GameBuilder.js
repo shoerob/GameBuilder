@@ -1,7 +1,7 @@
 var GameBuilder = (function() {
 	function GameBuilder(editorCanvas) {
 		this.gameManager = new engine.GameManager(editorCanvas.getContext('2d'));
-		this.gameManager.mode = 'edit';
+		this.gameManager.editMode = true;
 
 		// start rendering
 		this.gameManager.startInterval(1);
@@ -10,7 +10,7 @@ var GameBuilder = (function() {
 	}
 	GameBuilder.prototype = {
 		createGame: function() {
-			this.game = engine.Game.create();
+			this.game = engine.Game.create('default');
 
 			// provide it with a default scene
 			var defaultScene = engine.Scene.create('default');
@@ -30,6 +30,14 @@ var GameBuilder = (function() {
 
 		},
 		createSceneObject: function() {
+
+			// TODO: we should pass in a model here instead of setting properties directly
+			// the game editor should ONLY interact with the model, and NOT state properties
+			// any game editing behaviors should ONLY interact with the model as well
+			// the update() function should NOT be called when in edit mode
+			// the model could probably have an event subscribed to by the host that
+			// triggers a host update on model updates
+
 			var sceneObject = engine.SceneObject.create('' + Math.random() * 6000);
 			sceneObject.position.x = Math.random() * 640;
 			sceneObject.position.y = Math.random() * 480;
@@ -38,6 +46,12 @@ var GameBuilder = (function() {
 		saveGame: function() {
 			//console.log(this.game.save());
 			console.log(this.game.getModel());
+		},
+		play: function() {
+
+		},
+		stop: function() {
+			this.game.resetFromModel();
 		}
 	};
 

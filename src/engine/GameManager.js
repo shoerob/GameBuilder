@@ -6,11 +6,11 @@ function GameManager(context) {
 	this._intervalId = null;
 
 	// globals
-	this.mode = 'edit'; // or 'run'
+	this.editMode = false;
 	this._game = null;
 
 	// managers
-	this.sceneManager = new SceneManager(context)
+	this.sceneManager = new SceneManager(this, context)
 	//this.assetManager ...
 	//this.soundManager ...
 }

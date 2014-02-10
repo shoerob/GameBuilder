@@ -13,7 +13,13 @@ var SceneObject = (function() {
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
-		update: function(gameTime) { },
+		resetFromModel: function() {
+			this.position = { x: this.model.position.x, y: this.model.position.y };
+			this.bounds = { width: this.model.bounds.width, height: this.model.bounds.height };
+		},
+		update: function(gameTime) { 
+			this.position.y++;
+		},
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
 		    ctx.fillRect(
