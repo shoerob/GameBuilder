@@ -9,70 +9,16 @@
 		<canvas id="canvasOne" width="640" height="480">
 			<p>This browser does not support canvas.</p>
 		</canvas>
-		<button type="button" onclick="gameBuilder.createGame()">Create Game</button>
-		<button type="button" onclick="gameBuilder.createScene()">Create Scene</button>
-		<button type="button" onclick="">Add SceneObject</button>
+		<button type="button" onclick="gameBuilder.createGame();">Create Game</button>
+		<button type="button" onclick="gameBuilder.createScene();">Create Scene</button>
+		<button type="button" onclick="gameBuilder.createSceneObject();">Create SceneObject</button>
+		<button type="button" onclick="gameBuilder.saveGame();">Save Game</button>
 	</body>
 	<script type="text/javascript">
 
 	var gameBuilder;
 	function startGameBuilder() {
 		gameBuilder = new GameBuilder(document.getElementById('canvasOne'));
-		// var gameManager = new engine.GameManager();
-		// gameManager.startInterval(1);
-
-		// function SnowSceneObject(name, particles, left, top, width, height) {
-		// 	engine.SceneObject.call(this, name);
-
-		// 	this.particles = [];
-		// 	for (var i = 0; i < particles; i++) {
-		// 		this.particles.push({ x: Math.random()*width+left, y: Math.random()*height+top });
-		// 	}
-
-		// 	this.left = left;
-		// 	this.top = top;
-		// 	this.width = width;
-		// 	this.height = height;
-		// }
-		// SnowSceneObject.prototype = Object.create(engine.SceneObject.prototype);
-		// SnowSceneObject.prototype.constructor = SnowSceneObject;
-		// SnowSceneObject.prototype.update = function(gameTime) {
-		// 	var timePassed = gameTime.getTimePassed()/60;
-		// 	this.particles.forEach(function(particle) {
-		// 		particle.y += 1 * timePassed;
-		// 		particle.x += (Math.random() * 2 - 1) * timePassed;
-
-		// 		if (particle.y > this.top+this.height) {
-		// 			particle.y = this.top;
-		// 		}
-		// 		if (particle.x > this.left+this.width+4) {
-		// 			particle.x = this.left;
-		// 		}
-		// 		if (particle.x < this.left-4) {
-		// 			particle.x = this.left+this.width;
-		// 		}
-		// 	}.bind(this));
-		// }
-		// SnowSceneObject.prototype.render = function(ctx) {
-		// 	this.particles.forEach(function(particle) {
-		// 		ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
-		// 	    ctx.fillRect (particle.x, particle.y, 4, 4);
-		// 	});
-		// }
-
-		// // CanvasOne
-		// var contextOne = document.getElementById('canvasOne').getContext('2d');
-		// var sceneManagerOne = gameManager.createSceneManager("sceneManagerOne", contextOne);
-		// var sceneOne = new engine.Scene('sceneOne');
-
-		// // snow effect
-		// sceneOne.addSceneObject(new SnowSceneObject('1', 5000, 0, 0, 640, 480));
-		// //sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('1', 5000, 0, 0, 640, 480));
-		// //sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('2', 500, 100, 100, 100, 100));
-		// //sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('3', 5000,200, 200, 640, 480));
-		// //sceneOne.addSceneObject(sceneObjectFactory.createSnowParticles('4', 5000,300, 300, 100, 100));
-
-		// sceneManagerOne.setScene(sceneOne);
 	}
 
 	</script>

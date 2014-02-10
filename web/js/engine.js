@@ -55,20 +55,36 @@ var SceneObject = (function() {
 	/**
 	* SceneObject
 	*/
-	function SceneObject(name) {
-		this.name = name;
+	function SceneObject(model) {
+		this.model = model;
+
+		this.name = model.name;
+		this.position = { x: model.position.x, y: model.position.y };
+		this.bounds = { width: model.bounds.width, height: model.bounds.height };
 	}
 	SceneObject.prototype = {
 		constructor: SceneObject,
 		update: function(gameTime) { },
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
-		    ctx.fillRect (320, 240, 25, 25);
+		    ctx.fillRect(this.position.x - this.bounds.width/2, this.position.y - this.bounds.height/2, 25, 25);
+		},
+		getModel: function() {
+			var model = JSON.parse(JSON.stringify(this.model)); // clone
+			return model;
 		}
 	}
 
 	function create(name) {
-		return new SceneObject(name);
+		// default model
+		var model = {
+			modelType: 'SceneObject',
+			name: name,
+			position: { x: 320, y: 240 },
+			bounds: { width: 25, height: 25 }
+		};
+
+		return new SceneObject(model);
 	}
 
 	function load(json) {
@@ -79,11 +95,9 @@ var SceneObject = (function() {
 }());
 var Scene = (function Scene() {
 
-	/**
-	 * Scene
-	 */
-	function Scene(name) {
-		this.name = name;
+	function Scene(model) {
+		this.model = model;
+		this.name = model.name;
 		this.sceneObjects = [];
 		this.sceneObjectsByName = {};
 	}
@@ -107,12 +121,29 @@ var Scene = (function Scene() {
 
 			this.sceneObjectsByName[sceneObject.name] = sceneObject;
 			this.sceneObjects.push(sceneObject);
+		},
+		getModel: function() {
+			var model = JSON.parse(JSON.stringify(this.model)); // clone
+			this.sceneObjects.forEach(function(sceneObject) {
+				model.sceneObjects[sceneObject.name] = sceneObject.getModel();
+			});
+
+			return model;
 		}
 	}
 
 	function create(name) {
+		// default model
+		var model = {
+			modelType: 'Scene',
+			name: name,
+			sceneObjects: {}
+		};
+
 		// create the scene
-		var scene = new Scene(name);
+		var scene = new Scene(model);
+
+		// TODO: we shouldn't provide default children here
 
 		// provide it with a default SceneObject
 		var sceneObject = engine.SceneObject.create('default');
@@ -153,32 +184,52 @@ SceneManager.prototype = {
  * This is the Game description / creation object.
  */
 var Game = (function Game() {
-	function Game() {
-		this.scenes = {};
+	function Game(model) {
+		this.model = model;
 
-		this.defaults = {
-			startSceneName: ''
-		}
+		this.startSceneName = model.startSceneName;
+		this.currentSceneName = '';
+		this.scenes = {};
 	}
 	Game.prototype = {
 		constructor: Game,
+		init: function() {
+			this.currentSceneName = this.startSceneName;
+		},
+		getCurrentScene: function() {
+			return this.scenes[this.currentSceneName];
+		},
 		addScene: function() {
 
 		},
-		saveAsJSON: function() {
-			// Build a JSON structure using the defaults
-			// from all children objects and their children
-		},
+		getModel: function() {
+			var model = JSON.parse(JSON.stringify(this.model)); // clone
+			for (sceneName in this.scenes) {
+				model.scenes[sceneName] = this.scenes[sceneName].getModel();
+			}
 
+			return model;
+		}
 	}
 
 	function create() {
+		// default model
+		var model = {
+			modelType: 'Game',
+			name: '',
+			startSceneName: '',
+			scenes: {}
+		};
+
 		// create the game
-		var game = new Game();
+		var game = new Game(model);
+
+		// TODO: we shouldn't provide default children here
 
 		// provide it with a default scene
 		game.scenes['default'] = engine.Scene.create('default');
-		game.defaults.startSceneName = 'default';
+		game.startSceneName = 'default';
+		game.init();
 
 		return game;
 	}
@@ -233,7 +284,8 @@ GameManager.prototype = {
 		this._game = game;
 
 		// load and display the start scene in the game
-		this.sceneManager.setScene(this._game.scenes[this._game.defaults.startSceneName]);
+		//this.sceneManager.setScene(this._game.scenes[this._game.defaults.startSceneName]);
+		this.sceneManager.setScene(this._game.getCurrentScene());
 	}
 };
 

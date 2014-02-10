@@ -41,6 +41,7 @@ GameManager.prototype = {
 		this._game = game;
 
 		// load and display the start scene in the game
-		this.sceneManager.setScene(this._game.scenes[this._game.defaults.startSceneName]);
+		//this.sceneManager.setScene(this._game.scenes[this._game.defaults.startSceneName]);
+		this.sceneManager.setScene(this._game.getCurrentScene());
 	}
 };

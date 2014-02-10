@@ -1,10 +1,8 @@
 var Scene = (function Scene() {
 
-	/**
-	 * Scene
-	 */
-	function Scene(name) {
-		this.name = name;
+	function Scene(model) {
+		this.model = model;
+		this.name = model.name;
 		this.sceneObjects = [];
 		this.sceneObjectsByName = {};
 	}
@@ -28,12 +26,29 @@ var Scene = (function Scene() {
 
 			this.sceneObjectsByName[sceneObject.name] = sceneObject;
 			this.sceneObjects.push(sceneObject);
+		},
+		getModel: function() {
+			var model = JSON.parse(JSON.stringify(this.model)); // clone
+			this.sceneObjects.forEach(function(sceneObject) {
+				model.sceneObjects[sceneObject.name] = sceneObject.getModel();
+			});
+
+			return model;
 		}
 	}
 
 	function create(name) {
+		// default model
+		var model = {
+			modelType: 'Scene',
+			name: name,
+			sceneObjects: {}
+		};
+
 		// create the scene
-		var scene = new Scene(name);
+		var scene = new Scene(model);
+
+		// TODO: we shouldn't provide default children here
 
 		// provide it with a default SceneObject
 		var sceneObject = engine.SceneObject.create('default');
