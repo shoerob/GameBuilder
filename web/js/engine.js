@@ -74,7 +74,9 @@ var SceneObject = (function() {
 		},
 		update: function(gameTime) { 
 			// this.position.y++;
-			eval(this.behavior);
+			(function() {
+				eval(this.behavior);
+			}.bind(this)());
 		},
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";

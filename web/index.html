@@ -18,7 +18,22 @@
 		<button type="button" onclick="gameBuilder.stop()">Stop</button>
 		<br/>
 <textarea id="behaviorScript" rows="10" cols="50">
-this.position.x+=1;
+if (!this.behaviorModel) {
+this.behaviorModel = {
+x : Math.random()*2-1,
+y : Math.random()*2-1
+}
+}
+
+this.position.x+=this.behaviorModel.x;
+this.position.y+=this.behaviorModel.y;
+
+if (this.position.x > 640 || this.position.x < 0) {
+this.behaviorModel.x*=-1;
+}
+if (this.position.y > 480 || this.position.y < 0) {
+this.behaviorModel.y*=-1;
+}
 </textarea>
 	</body>
 	<script type="text/javascript">
