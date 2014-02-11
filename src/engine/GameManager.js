@@ -6,7 +6,7 @@ function GameManager(context) {
 	this._intervalId = null;
 
 	// globals
-	this.editMode = false;
+	this.paused = false;
 	this._game = null;
 
 	// managers
@@ -28,7 +28,8 @@ GameManager.prototype = {
 		var gameTime = new GameTime();
 		this._intervalId = setInterval(function() {
 			gameTime.update();
-			self.sceneManager.process(gameTime);
+			
+			self.sceneManager.process(gameTime, self.paused);
 		}, frameInterval);
 	},
 	/**

@@ -1,7 +1,7 @@
 var GameBuilder = (function() {
 	function GameBuilder(editorCanvas) {
 		this.gameManager = new engine.GameManager(editorCanvas.getContext('2d'));
-		this.gameManager.editMode = true;
+		this.gameManager.paused = true;
 
 		// start rendering
 		this.gameManager.startInterval(1);
@@ -41,6 +41,7 @@ var GameBuilder = (function() {
 			var sceneObject = engine.SceneObject.create('' + Math.random() * 6000);
 			sceneObject.model.position.x = Math.random() * 640;
 			sceneObject.model.position.y = Math.random() * 480;
+			sceneObject.model.behavior = "this.position.y++;";
 			sceneObject.resetFromModel();
 			this.game.getCurrentScene().addSceneObject(sceneObject);
 		},
@@ -49,9 +50,12 @@ var GameBuilder = (function() {
 			console.log(this.game.getModel());
 		},
 		play: function() {
-
+			console.log("Playing...");
+			this.gameManager.paused = false;
 		},
 		stop: function() {
+			console.log("Pausing...");
+			this.gameManager.paused = true;
 			this.game.resetFromModel();
 		}
 	};

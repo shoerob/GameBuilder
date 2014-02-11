@@ -9,9 +9,12 @@ function SceneManager(gameManager, context) {
 }
 SceneManager.prototype = {
 	constructor: SceneManager,
-	process: function(gameTime) {
+	process: function(gameTime, paused) {
 		if (this._scene) {
-			this._scene.update(gameTime);
+			if (!paused) {
+				this._scene.update(gameTime);
+			}
+			
 			this._scene.render(this._ctx);
 		}
 	},

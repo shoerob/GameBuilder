@@ -61,6 +61,7 @@ var SceneObject = (function() {
 		this.name = model.name;
 		this.position = { x: model.position.x, y: model.position.y };
 		this.bounds = { width: model.bounds.width, height: model.bounds.height };
+		this.behavior = model.behavior;
 
 		this.scene = null; // parent
 	}
@@ -69,9 +70,12 @@ var SceneObject = (function() {
 		resetFromModel: function() {
 			this.position = { x: this.model.position.x, y: this.model.position.y };
 			this.bounds = { width: this.model.bounds.width, height: this.model.bounds.height };
+			this.behavior = this.model.behavior;
 		},
 		update: function(gameTime) { 
-			this.position.y++;
+			// this.position.y++;
+			eval(this.behavior);
+
 		},
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
@@ -93,7 +97,8 @@ var SceneObject = (function() {
 			modelType: 'SceneObject',
 			name: name,
 			position: { x: 320, y: 240 },
-			bounds: { width: 25, height: 25 }
+			bounds: { width: 25, height: 25 },
+			behavior: null
 		};
 
 		return new SceneObject(model);
@@ -180,9 +185,12 @@ function SceneManager(gameManager, context) {
 }
 SceneManager.prototype = {
 	constructor: SceneManager,
-	process: function(gameTime) {
+	process: function(gameTime, paused) {
 		if (this._scene) {
-			this._scene.update(gameTime);
+			if (!paused) {
+				this._scene.update(gameTime);
+			}
+			
 			this._scene.render(this._ctx);
 		}
 	},
@@ -266,7 +274,7 @@ function GameManager(context) {
 	this._intervalId = null;
 
 	// globals
-	this.editMode = false;
+	this.paused = false;
 	this._game = null;
 
 	// managers
@@ -288,7 +296,8 @@ GameManager.prototype = {
 		var gameTime = new GameTime();
 		this._intervalId = setInterval(function() {
 			gameTime.update();
-			self.sceneManager.process(gameTime);
+			
+			self.sceneManager.process(gameTime, self.paused);
 		}, frameInterval);
 	},
 	/**
