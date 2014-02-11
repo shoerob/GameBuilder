@@ -291,15 +291,23 @@ GameManager.prototype = {
 	startInterval: function(frameInterval) {
 		var self = this;
 		
-		/**
-		 * The main GameManager gameTime object
-		 */
-		var gameTime = new GameTime();
-		this._intervalId = setInterval(function() {
-			gameTime.update();
+		// /**
+		//  * The main GameManager gameTime object
+		//  */
+		// var gameTime = new GameTime();
+		// this._intervalId = setInterval(function() {
+		// 	gameTime.update();
 			
+		// 	self.sceneManager.process(gameTime, self.paused);
+		// }, frameInterval);
+
+		var gameTime = new GameTime();
+		var updateFunc = function() {
+			gameTime.update();
 			self.sceneManager.process(gameTime, self.paused);
-		}, frameInterval);
+			requestAnimationFrame(updateFunc);
+		};
+		updateFunc();
 	},
 	/**
 	 * Stops the game timer.
