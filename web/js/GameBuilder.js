@@ -29,7 +29,7 @@ var GameBuilder = (function() {
 		createScene: function() {
 
 		},
-		createSceneObject: function() {
+		createSceneObject: function(behaviorScript) { //hack for demo purposes only
 
 			// TODO: we should pass in a model here instead of setting properties directly
 			// the game editor should ONLY interact with the model, and NOT state properties
@@ -41,7 +41,7 @@ var GameBuilder = (function() {
 			var sceneObject = engine.SceneObject.create('' + Math.random() * 6000);
 			sceneObject.model.position.x = Math.random() * 640;
 			sceneObject.model.position.y = Math.random() * 480;
-			sceneObject.model.behavior = "this.position.y++;";
+			sceneObject.model.behavior = behaviorScript;
 			sceneObject.resetFromModel();
 			this.game.getCurrentScene().addSceneObject(sceneObject);
 		},

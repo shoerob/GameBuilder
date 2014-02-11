@@ -9,12 +9,17 @@
 		<canvas id="canvasOne" width="640" height="480">
 			<p>This browser does not support canvas.</p>
 		</canvas>
+		<br/>
 		<button type="button" onclick="gameBuilder.createGame();">Create Game</button>
 		<button type="button" onclick="gameBuilder.createScene();">Create Scene</button>
-		<button type="button" onclick="gameBuilder.createSceneObject();">Create SceneObject</button>
+		<button type="button" onclick="gameBuilder.createSceneObject(document.getElementById('behaviorScript').value);">Create SceneObject</button>
 		<button type="button" onclick="gameBuilder.saveGame();">Save Game</button>
 		<button type="button" onclick="gameBuilder.play()">Play</button>
 		<button type="button" onclick="gameBuilder.stop()">Stop</button>
+		<br/>
+<textarea id="behaviorScript" rows="10" cols="50">
+this.position.x+=1;
+</textarea>
 	</body>
 	<script type="text/javascript">
 

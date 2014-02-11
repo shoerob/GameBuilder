@@ -75,7 +75,6 @@ var SceneObject = (function() {
 		update: function(gameTime) { 
 			// this.position.y++;
 			eval(this.behavior);
-
 		},
 		render: function(ctx) {
 			ctx.fillStyle = "rgba(0, 200, 0, 0.5)";
