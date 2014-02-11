@@ -39,8 +39,9 @@ var GameBuilder = (function() {
 			// triggers a host update on model updates
 
 			var sceneObject = engine.SceneObject.create('' + Math.random() * 6000);
-			sceneObject.position.x = Math.random() * 640;
-			sceneObject.position.y = Math.random() * 480;
+			sceneObject.model.position.x = Math.random() * 640;
+			sceneObject.model.position.y = Math.random() * 480;
+			sceneObject.resetFromModel();
 			this.game.getCurrentScene().addSceneObject(sceneObject);
 		},
 		saveGame: function() {
