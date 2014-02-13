@@ -49,7 +49,7 @@ var Game = (function Game() {
 		// default model
 		var model = {
 			modelType: 'Game',
-			name: '',
+			name: name,
 			startSceneName: 'default', // HACK
 			scenes: {}
 		};

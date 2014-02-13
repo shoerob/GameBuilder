@@ -9,8 +9,8 @@ var GameBuilder = (function() {
 		this.game = null;
 	}
 	GameBuilder.prototype = {
-		createGame: function() {
-			this.game = engine.Game.create('default');
+		createGame: function(name) {
+			this.game = engine.Game.create(name);
 
 			// provide it with a default scene
 			var defaultScene = engine.Scene.create('default');

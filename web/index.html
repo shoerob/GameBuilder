@@ -1,22 +1,41 @@
 <html>
 	<head>
 		<title></title>
+		<link href="styles/kendo.common.min.css" rel="stylesheet" />
+		<link href="styles/kendo.default.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="gameBuilder.css">
-		<script type="text/javascript" src="js/engine.js"></script>
-		<script type="text/javascript" src="js/GameBuilder.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/kendo.web.min.js"></script>
+		<script src="js/engine.js"></script>
+		<script src="js/GameBuilder.js"></script>
 	</head>
-	<body onload="startGameBuilder();">
-		<canvas id="canvasOne" width="640" height="480">
-			<p>This browser does not support canvas.</p>
-		</canvas>
-		<br/>
-		<button type="button" onclick="gameBuilder.createGame();">Create Game</button>
-		<button type="button" onclick="gameBuilder.createScene();">Create Scene</button>
-		<button type="button" onclick="gameBuilder.createSceneObject(document.getElementById('behaviorScript').value);">Create SceneObject</button>
-		<button type="button" onclick="gameBuilder.saveGame();">Save Game</button>
-		<button type="button" onclick="gameBuilder.play()">Play</button>
-		<button type="button" onclick="gameBuilder.stop()">Stop</button>
-		<br/>
+	<body>
+		<ul id="menu">
+		    <li>Game
+		        <ul>
+		            <li id="New Game">New Game</li>
+		        </ul>
+		    </li>
+		    <li>Objects
+		        <ul>
+		        	<!--<li>Create Scene</li>-->
+		        	<li id="Create SceneObject">Create SceneObject</li>
+		        </ul>
+		    </li>
+		    <li>Play</li>
+		</ul>
+
+		<!-- New Game Window -->
+		<div id="newGameWindow">
+		    Name: <input type="text" id="newGame_gameName"><br>
+		    <button type="button" id="newGame_okButton">OK</button>
+		    <button type="button" id="newGame_cancelButton">Cancel</button>
+		</div>
+
+		<!-- Create SceneObject Window -->
+		<div id="createSceneObjectWindow">
+		    Name: <input type="text" id="createSceneObject_name"><br>
+		    Script: <br>
 <textarea id="behaviorScript" rows="10" cols="50">
 if (!this.behaviorModel) {
 this.behaviorModel = {
@@ -36,8 +55,81 @@ this.behaviorModel.y*=-1;
 }
 
 </textarea>
+		    <button type="button" id="createSceneObject_okButton">OK</button>
+		    <button type="button" id="createSceneObject_cancelButton">Cancel</button>
+		</div>		
+
+		<canvas id="canvasOne" width="640" height="480">
+			<p>This browser does not support canvas.</p>
+		</canvas>
+		<br/>
+		<button type="button" onclick="gameBuilder.createScene();">Create Scene</button>
+		<button type="button" onclick="gameBuilder.createSceneObject(document.getElementById('behaviorScript').value);">Create SceneObject</button>
+		<button type="button" onclick="gameBuilder.saveGame();">Save Game</button>
+		<button type="button" onclick="gameBuilder.play()">Play</button>
+		<button type="button" onclick="gameBuilder.stop()">Stop</button>
+		<br/>
 	</body>
 	<script type="text/javascript">
+	$(document).ready(function() {
+		var newGameWindow = $("#newGameWindow").kendoWindow({
+			title: "New Game",
+			height: "200px",
+			width: "400px",
+			modal: true,
+			draggable: false,
+			visible: false
+		}).data("kendoWindow");
+
+		var createSceneObjectWindow = $("#createSceneObjectWindow").kendoWindow({
+			title: "Create SceneObject",
+			height: "250px",
+			width: "400px",
+			modal: true,
+			draggable: false,
+			visible: false
+		}).data("kendoWindow");
+
+	    $("#menu").kendoMenu({
+	    	select: function(e) {
+	    		console.log(e.item.id);
+	    		if (e.item.id === 'New Game') {
+	    			newGameWindow.center();
+	    			newGameWindow.open();
+	    		} else if (e.item.id === 'Create SceneObject') {
+					createSceneObjectWindow.center();
+					createSceneObjectWindow.open();
+	    		}
+	    	}
+	    });
+
+		
+	    $("#newGame_okButton").kendoButton({
+	    	click: function(e){
+	    		newGameWindow.close();
+	    		gameBuilder.createGame($('#newGame_gameName').val());
+	    	}
+	    });
+        $("#newGame_cancelButton").kendoButton({
+        	click: function(e) {
+        		newGameWindow.close();
+        	}
+        });
+	    $("#createSceneObject_okButton").kendoButton({
+	    	click: function(e){
+	    		createSceneObjectWindow.close();
+	    		gameBuilder.createSceneObject($('#behaviorScript').val());
+	    	}
+	    });
+        $("#createSceneObject_cancelButton").kendoButton({
+        	click: function(e) {
+        		createSceneObjectWindow.close();
+        	}
+        });
+		
+
+	    startGameBuilder();
+	});
 
 	var gameBuilder;
 	function startGameBuilder() {
