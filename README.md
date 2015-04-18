@@ -1,6 +1,8 @@
 GameBuilder
 ===========
 
+This project is a simple game engine test project that runs completely inside a browser. Game objects can be created and JavaScript code can be attached to them.
+
 ### How to build ###
 
 1. Install Grunt with "sudo npm -g install grunt-cli"
